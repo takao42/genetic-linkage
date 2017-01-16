@@ -60,7 +60,7 @@ def crossParallel(L1, L2, rf, numProgenies):
 	iterable = range(0, numProgenies)
 	pool = multiprocessing.Pool()
 	func = partial(cross1, L1, L2, rf, numRows)
-	progenies = pool.map(func, iterable)
+	projenies = pool.map(func, iterable)
 	pool.close()
 	pool.join()
 
