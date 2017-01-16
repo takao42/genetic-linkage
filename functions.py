@@ -56,7 +56,6 @@ def crossParallel(L1, L2, rf, numProgenies):
 	progenies = [None]*numProgenies
 
 	# use multithread to calculate
-	
 	iterable = range(0, numProgenies)
 	pool = multiprocessing.Pool()
 	func = partial(cross1, L1, L2, rf, numRows)
@@ -73,16 +72,13 @@ def crossParallel(L1, L2, rf, numProgenies):
 # rf = array of recombination frequencies
 # numRows = number of rows in matrices
 def cross1(L1, L2, rf, numRows, iterable):
-	print("  generating progeny " + str(iterable+1))
-
 	# creating numRow * 2 matrix
-	print("    generating an empty progeny (all zeros) ")
 	progeny = np.zeros((numRows,2)) 	
 
 	# evaluating first row in L1 with 50/50 probability
 	# if randomValIndex is 0, it means the left value was chosen
 	# if randomValIndex is 1, it means the right value was chosen
-	print("    evaluating L1 and making left side of progeny matrix")
+	print("  evaluating L1 and making left side of progeny " + str(iterable+1))
 	randomValIndex = np.random.randint(2)
 	randomVal = L1[0][randomValIndex]
 	progeny[0][0] = randomVal
@@ -113,7 +109,7 @@ def cross1(L1, L2, rf, numRows, iterable):
 	# evaluating first row in L2 with 50/50 probability
 	# if randomValIndex is 0, it means the left value was chosen
 	# if randomValIndex is 1, it means the right value was chosen
-	print("    evaluating L2 and making right side of progeny matrix")
+	print("  evaluating L2 and making right side of progeny matrix "  + str(iterable+1))
 	randomValIndex = np.random.randint(2)
 	randomVal = L2[0][randomValIndex]
 	progeny[0][1] = randomVal
