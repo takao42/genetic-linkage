@@ -1,6 +1,6 @@
 #!/usr/bin/python
-from functions import cross
-from functions import crossParallel
+from GenericLinkage import cross
+from GenericLinkage import crossParallel
 import numpy as np
 
 # matrix[row][column]
@@ -29,10 +29,11 @@ if __name__ == '__main__':
 	# generate progenies
 	print("generating 30 progenies")
 	#progenies = cross(L1, L2, rf, 2)
-	progenies = crossParallel(L1, L2, rf, 2)
+	progenies = crossParallel(L1, L2, rf, 30)
 
 	if(progenies == None):
 		print("error")
 	else:
 		print("jobs done")
 		print(progenies[1])
+		
