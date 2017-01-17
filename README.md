@@ -2,12 +2,12 @@
 
 This python module can be used to produce multiple progenies from two genes.
 
-Explanation:<br>
+##Explanation
 cross - crosses two genes and produces multiple progenies<br>
 crossParallel - multi threading version of cross. usually 2-3 times as fast as the single threading one<br>
 cross1 - crosses two genes and produces one progeny
 
-Dependency: numpy <br>
+##Dependency
 sudo pip install numpy
 
 Compiled with Python 2.7<br>
