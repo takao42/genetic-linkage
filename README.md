@@ -2,6 +2,10 @@
 
 This python module can be used to produce multiple progenies from two genes.
 
+A gene is defined as n * 2 matrix filled with 0 and 1s.
+0 means it is useless for certain purpose such as making a plant that is strong to certain desease.
+1 means it is usefull.
+
 ##Explanation
 cross - crosses two genes and produces multiple progenies<br>
 crossParallel - multi threading version of cross. usually 2-3 times as fast as the single threading one<br>
