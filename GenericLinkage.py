@@ -1,141 +1,80 @@
 #!/usr/bin/python
 import numpy as np
-from functools import partial
-import multiprocessing
 
-# return an array of generated progenies
-# L1 = numRow * 2 matrix
-# L2 = numRow * 2 matrix
-# rf = array of recombination frequencies
-# numProgenies = number of generated DNAs
-def cross(L1, L2, rf, numProgenies):
-	# get number of rows of L1
-	numRows = L1.shape[0]
-	# if L1 and L2 don't have the same number of rows
-	if (numRows != L2.shape[0]):
-		print("these matrices don't have the same number of rows")
-		return None 
-	# if not enough recombination frequencies are provided
-	if (len(rf) != numRows-1):
-		print("not enough recombination frequencies")
-		return None
+# L1 = n * 2 matrix
+# L2 = n * 2 matrix
+# RF = (n-1) * 1 matrix of recombination frequencies
+# k  = number of progenies to produce
+def cross2(L1, L2, RF, k):
+	# number of rows in L1
+	# octave code
+	#n = size(L1,1);
+	n = L1.shape[0]
 
-	# create a list of matrices
-	progenies = [None]*numProgenies
-	#progenies = np.full(numProgenies, None)
+	# RC = n * (2*k) matrix
+	# and first 0.5 probability to RF
+	# duplicate the probabilities 2*k times
+	# compare the probabilities with random n * (2*k) matrix
+	# this(RC) shows which side has to be chosen
+	# the first row means which side to choose
+	# 0 means left and 1 means right
+	# the rest of the rows mean if they need to change row
+	# 0 means don't change row and 1 means change row
+	# octave code
+	#RC = rand(n,2*k)<=repmat([0.5; RF],1,2*k);
+	probabilities = np.vstack((np.array([[0.5]]), RF))
+	RC = np.random.random((n, 2*k))<=np.tile(probabilities, [1, 2*k])
 
-	# create progenies
-	i = 0
-	while (i < numProgenies):
-		progenies[i] = cross1(L1, L2, rf, numRows, i)
-		i += 1
+	# Cumulative products of elements along column
+	# it shows which columns to choose in Y1 and Y2
+	# In fRight, 0 means left and 1 means right
+	# In fLeft, 0 means right and 1 means left
+	# numpy comprod is much slower than octave comprod
+	# octave code
+	#f = cumprod(1-2*RC) <= 0;
+	cumprodRC = np.cumprod(1-2*RC, axis=0)
+	fRight = cumprodRC < 0
+	fRight = np.reshape(fRight, (n,2*k), order='F')
+	fLeft  = cumprodRC > 0
+	fLeft = np.reshape(fLeft, (n,2*k), order='F')
+	#print "fRight"
+	#print fRight
 
-	return progenies 
+	# copy the left sides of L1&L2 and combine them
+	# copy the right sides of L1&L2 and and combine them
+	# duplicate the combined matrix k times and 
+	# put them in a n * (2*k) matrices
+	# octave code
+	#Y1 = repmat([L1(:,1),L2(:,1)],1,k);
+	#Y2 = repmat([L1(:,2),L2(:,2)],1,k);
+	splittedL1 = np.hsplit(L1, 2)
+	splittedL2 = np.hsplit(L2, 2)
+	#print "splittedL1"
+	#print splittedL1
+	#print "splittedL1[0]"
+	#print splittedL1[0]
+	combinedLeft = np.hstack((splittedL1[0], splittedL2[0]))
+	combinedRight = np.hstack((splittedL1[1], splittedL2[1]))
+	Y1 = np.tile(combinedLeft, [1, k])
+	Y2 = np.tile(combinedRight, [1, k])
+	#print "Y1"
+	#print Y1
+	#print "Y2"
+	#print Y2
 
+	# multiple each element in Y1 and Y2  
+	# by fLeft and fRight respectively
+	# and add them
+	# this is the result
+	# octave code
+	#Y1(f) = Y2(f);
+	Y = fLeft*Y1 + fRight*Y2
+	#print "Y"
+	#print Y
 
-# multithreding version of cross function
-# it is about 2-3 times as fast as normal cross
-# return an array of generated progenies
-# L1 = numRow * 2 matrix
-# L2 = numRow * 2 matrix
-# rf = array of recombination frequencies
-# numProgenies = number of generated DNAs
-def crossParallel(L1, L2, rf, numProgenies):
-	# get number of rows of L1
-	numRows = L1.shape[0]
-	# if L1 and L2 don't have the same number of rows
-	if (numRows != L2.shape[0]):
-		print("ERROR: these matrices don't have the same number of rows")
-		return None 
-	# if not enough recombination frequencies are provided
-	if (len(rf) != numRows-1):
-		print("ERROR: not enough recombination frequencies")
-		return None
+	# reshape n * 2k matrix to n*2*k matrix
+	# octave code
+	#Y1 = reshape(Y1,n,2,k);
+	Y = np.hsplit(Y, k)
 
-	# create a list of matrices
-	progenies = [None]*numProgenies
-
-	# use multithread to calculate
-	iterable = range(0, numProgenies)
-	pool = multiprocessing.Pool()
-	func = partial(cross1, L1, L2, rf, numRows)
-	progenies = pool.map(func, iterable)
-	pool.close()
-	pool.join()
-
-	return progenies 
-
-
-# return generated progeny
-# L1 = numRow * 2 matrix
-# L2 = numRow * 2 matrix
-# rf = array of recombination frequencies
-# numRows = number of rows in matrices
-def cross1(L1, L2, rf, numRows, iterable):
-	# creating numRow * 2 matrix
-	print("  generating an empty progeny " + str(iterable+1))
-	progeny = np.zeros((numRows,2)) 	
-
-	# evaluating first row in L1 with 50/50 probability
-	# if randomValIndex is 0, it means the left value was chosen
-	# if randomValIndex is 1, it means the right value was chosen
-	print("  evaluating L1 and making left side of progeny " + str(iterable+1))
-	randomValIndex = np.random.randint(2)
-	randomVal = L1[0][randomValIndex]
-	progeny[0][0] = randomVal
-
-	# evaluate other rows in L1
-	for i in range(numRows-1):      
-		# randomValIndex will be a weighted random index
-		# of the value from each row in L1
-
-		# decide the weights based on 
-		# which side the value was on the previous row
-		if (randomValIndex == 0):
-			leftWeight = 1-rf[i]
-		elif (randomValIndex == 1):
-			leftWeight = rf[i]
-
-		# get the random value and index from choices and weights
-		randomvalue = np.random.rand()
-		if (randomvalue <= leftWeight):
-			randomValIndex = 0
-		else:
-			randomValIndex = 1
-
-		# substitute the gained value into progeny
-		progeny[i+1][1] = L1[i+1][randomValIndex]
-
-		
-	# evaluating first row in L2 with 50/50 probability
-	# if randomValIndex is 0, it means the left value was chosen
-	# if randomValIndex is 1, it means the right value was chosen
-	print("  evaluating L2 and making right side of progeny matrix "  + str(iterable+1))
-	randomValIndex = np.random.randint(2)
-	randomVal = L2[0][randomValIndex]
-	progeny[0][1] = randomVal
-
-	# evaluate other rows in L2	
-	for i in range(numRows-1):   
-		# randomValIndex will be a weighted random index
-		# of the value from each row in L2
-
-		# decide the weights based on 
-		# which side the value was on the previous row
-		if (randomValIndex == 0):
-			leftWeight = 1-rf[i]
-		elif (randomValIndex == 1):
-			leftWeight = rf[i]
-
-		# get the random value and index from choices and weights
-		randomvalue = np.random.rand()
-		if (randomvalue <= leftWeight):
-			randomValIndex = 0
-		else:
-			randomValIndex = 1
-
-		# substitute the gained value into progeny
-		progeny[i+1][1] = L2[i+1][randomValIndex]
-
-	return progeny
-
+	return Y
