@@ -3,78 +3,65 @@ import numpy as np
 
 # L1 = n * 2 matrix
 # L2 = n * 2 matrix
-# RF = (n-1) * 1 matrix of recombination frequencies
+# RF = array of recombination frequencies of size (n-1) 
 # k  = number of progenies to produce
 def cross2(L1, L2, RF, k):
-	# number of rows in L1
-	# octave code
-	#n = size(L1,1);
-	n = L1.shape[0]
+	# number of columns in L1
+	n = L1.shape[1]
 
-	# RC = n * (2*k) matrix
+	# RC = (2 k) * n matrix
 	# and first 0.5 probability to RF
-	# duplicate the probabilities 2*k times
-	# compare the probabilities with random n * (2*k) matrix
-	# this(RC) shows which side has to be chosen
-	# the first row means which side to choose
-	# 0 means left and 1 means right
-	# the rest of the rows mean if they need to change row
-	# 0 means don't change row and 1 means change row
-	# octave code
-	#RC = rand(n,2*k)<=repmat([0.5; RF],1,2*k);
-	probabilities = np.vstack((np.array([[0.5]]), RF))
-	RC = np.random.random((n, 2*k))<=np.tile(probabilities, [1, 2*k])
+	# duplicate the probabilities 2*k times vertically
+	# compare the probabilities with random 2k* n matrix
+	# the first column means which side to choose
+	# 0 means up and 1 means down
+	# the rest of the columns mean if they need to change column
+	# 0 means don't change column and 1 means change column
+	probabilities = np.hstack((np.array([0.5]), RF))
+	RC = np.random.random((2*k, n))<=np.tile(probabilities, [2*k, 1])
+	#print "RC"
+	#print RC
 
-	# Cumulative products of elements along column
+	# Cumulative products of elements along row
 	# it shows which columns to choose in Y1 and Y2
-	# In fRight, 0 means left and 1 means right
-	# In fLeft, 0 means right and 1 means left
-	# numpy comprod is much slower than octave comprod
-	# octave code
-	#f = cumprod(1-2*RC) <= 0;
-	cumprodRC = np.cumprod(1-2*RC, axis=0)
-	fRight = cumprodRC < 0
-	fRight = np.reshape(fRight, (n,2*k), order='F')
-	fLeft  = cumprodRC > 0
-	fLeft = np.reshape(fLeft, (n,2*k), order='F')
-	#print "fRight"
-	#print fRight
+	# In fDown, 0 means up and 1 means down
+	# In fUp, 0 means down and 1 means up
+	cumprodRC = np.cumprod(1-2*RC, axis=1)
+	fDown = cumprodRC < 0
+	fDown = np.reshape(fDown, (2*k, n), order='F')
+	fUp  = cumprodRC > 0
+	fUp = np.reshape(fUp, (2*k, n), order='F')
+	#print "fDown"
+	#print fDown
 
-	# copy the left sides of L1&L2 and combine them
-	# copy the right sides of L1&L2 and and combine them
+	# copy the up sides of L1&L2 and combine them
+	# copy the down sides of L1&L2 and and combine them
 	# duplicate the combined matrix k times and 
 	# put them in a n * (2*k) matrices
-	# octave code
-	#Y1 = repmat([L1(:,1),L2(:,1)],1,k);
-	#Y2 = repmat([L1(:,2),L2(:,2)],1,k);
-	splittedL1 = np.hsplit(L1, 2)
-	splittedL2 = np.hsplit(L2, 2)
+	splittedL1 = np.vsplit(L1, 2)
+	splittedL2 = np.vsplit(L2, 2)
 	#print "splittedL1"
 	#print splittedL1
 	#print "splittedL1[0]"
 	#print splittedL1[0]
-	combinedLeft = np.hstack((splittedL1[0], splittedL2[0]))
-	combinedRight = np.hstack((splittedL1[1], splittedL2[1]))
-	Y1 = np.tile(combinedLeft, [1, k])
-	Y2 = np.tile(combinedRight, [1, k])
+	combinedUp = np.vstack((splittedL1[0], splittedL2[0]))
+	combinedDown = np.vstack((splittedL1[1], splittedL2[1]))
+	Y1 = np.tile(combinedUp, [k, 1])
+	Y2 = np.tile(combinedDown, [k, 1])
 	#print "Y1"
 	#print Y1
 	#print "Y2"
 	#print Y2
 
-	# multiple each element in Y1 and Y2  
-	# by fLeft and fRight respectively
+	# multiple elements in Y1 and Y2  
+	# by fUp and fDown respectively
 	# and add them
 	# this is the result
-	# octave code
-	#Y1(f) = Y2(f);
-	Y = fLeft*Y1 + fRight*Y2
+	Y = fUp*Y1 + fDown*Y2
 	#print "Y"
 	#print Y
 
-	# reshape n * 2k matrix to n*2*k matrix
-	# octave code
-	#Y1 = reshape(Y1,n,2,k);
-	Y = np.hsplit(Y, k)
+	# reshape 2k * n matrix to 2*n*k matrix
+	Y = np.vsplit(Y, k)
 
 	return Y

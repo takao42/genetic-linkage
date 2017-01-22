@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import time
 
 class Timer(object):
