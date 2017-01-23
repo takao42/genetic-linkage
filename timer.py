@@ -15,5 +15,5 @@ class Timer(object):
         self.elapsed = time.time() - self.tstart
         if self.verbose:
             if self.name:
-                print '[%s]' % self.name,
-            print 'Elapsed: %s' % (self.elapsed)
+                print('[%s]' % self.name)
+            print('Elapsed: %s' % self.elapsed)
