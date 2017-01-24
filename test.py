@@ -17,7 +17,7 @@ def testBasic1():
 	# number of columns in a gene
 	n = 1400000
 	# number of progenies to produce
-	k = 300
+	k = 30
 	# generate two random 2 by n matrices
 	# filled with random 0 and 1
 	L1 = np.random.randint(2, size=(2,n))
@@ -130,10 +130,10 @@ def testSP1():
 
 if __name__ == '__main__':    
 	#testBasic0()
-	#testBasic1()
+	testBasic1()
 	#testRotation0()
 	#testRotation1()
 	#testMP0()
 	#testMP1()
 	#testSP0()
-	testSP1()
+	#testSP1()
