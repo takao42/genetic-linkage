@@ -21,7 +21,9 @@ def testBasic1():
 	# generate two random 2 by n matrices
 	# filled with random 0 and 1
 	L1 = np.random.randint(2, size=(2,n))
+	L1 = np.array(L1, dtype = np.bool)
 	L2 = np.random.randint(2, size=(2,n))
+	L2 = np.array(L2, dtype = np.bool)
 	# array of recombination frequencies of size (n-1) 
 	RF = 0.1*np.random.random(n-1)
 	# generate progenies

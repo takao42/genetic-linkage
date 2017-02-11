@@ -26,7 +26,7 @@ def cross2(L1, L2, RF, k):
 	# it shows which columns to choose in Y1 and Y2
 	# In fDown, 0 means up and 1 means down
 	# In fUp, 0 means down and 1 means up
-	cumprodRC = np.cumprod(1-2*RC, axis=1)
+	cumprodRC = np.cumprod(1-2*RC, axis=1, dtype=np.int8)
 	fDown = cumprodRC < 0
 	fDown = np.reshape(fDown, (2*k, n), order='F')
 	fUp  = cumprodRC > 0
@@ -41,6 +41,7 @@ def cross2(L1, L2, RF, k):
 	combinedUp = np.vstack((splittedL1[0], splittedL2[0]))
 	combinedDown = np.vstack((splittedL1[1], splittedL2[1]))
 	Y1 = np.tile(combinedUp, [k, 1])
+
 	Y2 = np.tile(combinedDown, [k, 1])
 
 	# multiple elements in Y1 and Y2  
