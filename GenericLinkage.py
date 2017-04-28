@@ -1,10 +1,10 @@
 #!/usr/bin/python
 import numpy as np
 
-# L1 = n * 2 matrix
-# L2 = n * 2 matrix
+# L1 = 2 by n matrix
+# L2 = 2 by n matrix
 # RF = array of recombination frequencies of size (n-1) 
-# k  = number of progenies to produce
+# k  = number of progeny to produce
 def cross2(L1, L2, RF, k):
 	# number of columns in L1
 	n = L1.shape[1]
@@ -19,12 +19,17 @@ def cross2(L1, L2, RF, k):
 	# 0 means don't change column and 1 means change column
 	probabilities = np.hstack((np.array([0.5]), RF))
 	RC = np.random.random((2*k, n))<=np.tile(probabilities, [2*k, 1])
+	print(RC)
 
-	# Cumulative products of elements along row
+	# cumprodRC is Cumulative products of elements along row
+	# -1 means choose down
+	# 1 means choose up
 	# it shows which columns to choose in Y1 and Y2
 	# In fDown, 0 means up and 1 means down
 	# In fUp, 0 means down and 1 means up
+	print(np.cumprod(1-2*RC, axis=1))
 	cumprodRC = np.cumprod(1-2*RC, axis=1, dtype=np.int8)
+	print(cumprodRC)
 	fDown = cumprodRC < 0
 	fDown = np.reshape(fDown, (2*k, n), order='F')
 	fUp  = cumprodRC > 0

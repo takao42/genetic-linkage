@@ -6,8 +6,8 @@ from GenericLinkage import *
 def testBasic0():
 	L1 = np.array([[0,0,0,0,0],[1,1,1,1,1]])
 	L2 = np.array([[1,1,1,1,1],[0,0,0,0,0]])
-	L1 = np.array(L1, dtype = np.int8)
-	L2 = np.array(L2, dtype = np.int8)
+	L1 = np.array(L1, dtype = np.bool)
+	L2 = np.array(L2, dtype = np.bool)
 	RF = np.array([0.05,0.05,0.05,0.05])
 
 	with Timer('generating 3 progenies'):
@@ -23,9 +23,9 @@ def testBasic1():
 	# generate two random 2 by n matrices
 	# filled with random 0 and 1
 	L1 = np.random.randint(2, size=(2,n))
-	L1 = np.array(L1, dtype = np.int8)
+	L1 = np.array(L1, dtype = np.bool)
 	L2 = np.random.randint(2, size=(2,n))
-	L2 = np.array(L2, dtype = np.int8)
+	L2 = np.array(L2, dtype = np.bool)
 	# array of recombination frequencies of size (n-1) 
 	RF = 0.1*np.random.random(n-1)
 	# generate progenies
@@ -80,9 +80,64 @@ def testRotation1():
 	with Timer('generating 30 progenies'):
 		Y = cross2(L1,L2,RF,k)
 
+def testMP0():
+	L1 = np.array([[0,0,0,0,0],[1,1,1,1,1]])
+	L2 = np.array([[1,1,1,1,1],[0,0,0,0,0]])
+	RF = np.array([0.05,0.05,0.05,0.05])
+
+	k = 35
+	timerName = 'generating ' + str(k) + ' progenies'
+	with Timer(timerName):
+		Y = cross2mp(L1,L2,RF,k)
+
+def testMP1():
+	# number of rows in a gene
+	n = 1400000
+	# number of progenies to produce
+	k = 489
+	# generate two random 2 by n matrices
+	# filled with random 0 and 1
+	L1 = np.random.randint(2, size=(2,n))
+	L2 = np.random.randint(2, size=(2,n))
+	# array of recombination frequencies of size (n-1) 
+	RF = 0.1*np.random.random(n-1)
+	# generate progenies
+	timerName = 'generating ' + str(k) + ' progenies'
+	with Timer(timerName):
+		Y = cross2mp(L1,L2,RF,k)
+
+def testSP0():
+	L1 = np.array([[0,0,0,0,0],[1,1,1,1,1]])
+	L2 = np.array([[1,1,1,1,1],[0,0,0,0,0]])
+	RF = np.array([0.05,0.05,0.05,0.05])
+
+	k = 35
+	timerName = 'generating ' + str(k) + ' progenies'
+	with Timer(timerName):
+		Y = cross2sp(L1,L2,RF,k)
+
+def testSP1():
+	# number of rows in a gene
+	n = 1400000
+	# number of progenies to produce
+	k = 489
+	# generate two random 2 by n matrices
+	# filled with random 0 and 1
+	L1 = np.random.randint(2, size=(2,n))
+	L2 = np.random.randint(2, size=(2,n))
+	# array of recombination frequencies of size (n-1) 
+	RF = 0.1*np.random.random(n-1)
+	# generate progenies
+	timerName = 'generating ' + str(k) + ' progenies'
+	with Timer(timerName):
+		Y = cross2sp(L1,L2,RF,k)
 
 if __name__ == '__main__':    
-	testBasic0()
-	#testBasic1()
+	#testBasic0()
+	testBasic1()
 	#testRotation0()
 	#testRotation1()
+	#testMP0()
+	#testMP1()
+	#testSP0()
+	#testSP1()
