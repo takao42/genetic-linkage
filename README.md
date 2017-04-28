@@ -10,10 +10,10 @@ sudo pip install numpy
 
 #### Parameters:
 
-L1 = 2 by n matrix representation of genome
-L2 = 2 by n matrix representation of genome
-RF = array of recombination frequencies of size (n-1) 
-k  = number of progeny to produce
+L1 = 2 by n matrix representation of genome<br>
+L2 = 2 by n matrix representation of genome<br>
+RF = array of recombination frequencies of size (n-1) <br>
+k  = number of progeny to produce<br>
 
 #### Return:
 
