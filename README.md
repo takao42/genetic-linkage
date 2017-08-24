@@ -2,7 +2,7 @@
 
 Efficient module that can be used to calculate multiple progeny from two genomes.
 
-Created as an [undergradutate research](http://lib.dr.iastate.edu/undergradresearch_symposium/2017/presentations/82/) at Iowa State University.
+Developed as part of an [undergradutate research](http://lib.dr.iastate.edu/undergradresearch_symposium/2017/presentations/82/) at Iowa State University.
 
 ## Dependency
 
