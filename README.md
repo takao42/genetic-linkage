@@ -60,4 +60,4 @@ The progeny can be calculated using the following algorithm.
 ## Contributions
 
 - [Takao Shibamoto](https://github.com/takao42) - main developer
-- [Dr. Lizhi Wang](https://www.imse.iastate.edu/directory/faculty/lizhi-wang/)
+- [Dr. Lizhi Wang](https://www.imse.iastate.edu/directory/faculty/lizhi-wang/) - mentor
