@@ -2,6 +2,8 @@
 
 Efficient module that can be used to calculate multiple progeny from two genomes.
 
+Created as an [undergradutate research](http://lib.dr.iastate.edu/undergradresearch_symposium/2017/presentations/82/) at Iowa State University.
+
 ## Dependency
 
 sudo pip install numpy
@@ -46,8 +48,6 @@ The progeny can be calculated using the following algorithm.
 4. Do the same for the other genome as well.
 5. Stick them together to make a 2 by n matrix
 
-
-
 ## Usage Example
 
 	L1 = np.array([[0,0,0,0,0],[1,1,1,1,1]])
@@ -56,3 +56,8 @@ The progeny can be calculated using the following algorithm.
 	L2 = np.array(L2, dtype=np.int8)
 	RF = np.array([0.05,0.05,0.05,0.05])
 	Y = cross2(L1,L2,RF,3)
+
+## Contributions
+
+- [Takao Shibamoto](https://github.com/takao42) - main developer
+- [Dr. Lizhi Wang](https://www.imse.iastate.edu/directory/faculty/lizhi-wang/)
