@@ -2,7 +2,9 @@
 
 Efficient module that can be used to calculate multiple progeny from two genomes.
 
-Developed as part of an [undergradutate research](http://lib.dr.iastate.edu/undergradresearch_symposium/2017/presentations/82/) at Iowa State University.
+Developed as part of an [undergradutate research at Iowa State University](http://lib.dr.iastate.edu/undergradresearch_symposium/2017/presentations/82/).
+
+This is [the research poster](https://github.com/takao42/GenomicSelectionSimulator/blob/master/poster.pdf).
 
 ## Dependency
 
