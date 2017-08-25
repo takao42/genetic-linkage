@@ -61,5 +61,5 @@ The progeny can be calculated using the following algorithm.
 
 - [Takao Shibamoto](https://github.com/takao42) - main developer
 - [Dr. Lizhi Wang](https://www.imse.iastate.edu/directory/faculty/lizhi-wang/) - mentor
-- [ISU Industrial and Manufacturing Systems Engineering](https://www.imse.iastate.edu/) - mentor
+- [ISU Industrial and Manufacturing Systems Engineering](https://www.imse.iastate.edu/)
 - [ISU University Honors Program](https://www.honors.iastate.edu/)
